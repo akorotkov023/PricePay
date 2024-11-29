@@ -11,6 +11,7 @@ class TransactionController extends AbstractController
     #[Route('/calculate-price', name: 'app_calculate-price', methods: ['POST'])]
     public function calculate(): JsonResponse
     {
+
         return $this->json(['price' => 1000], 200);
     }
 
