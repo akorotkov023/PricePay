@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Dto;
+namespace App\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CalculatePriceRequestDto
+class CalculatePriceRequest
 {
     #[Assert\NotBlank]
     #[Assert\Type(type: "integer")]

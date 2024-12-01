@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Controller\api;
+namespace App\Controller;
 
-use App\Dto\CalculatePriceRequestDto;
-use App\Dto\PurchaseRequestDto;
+use App\Model\CalculatePriceRequest;
+use App\Model\PurchaseRequest;
+use App\Service\CalculateService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,41 +12,27 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class TransactionController extends AbstractController
+class PurchaseController extends AbstractController
 {
-    #[Route('/calculate-price', name: 'app_calculate_price', methods: ['POST'], format: 'json')]
-    public function calculate(
-        #[MapRequestPayload(
-            acceptFormat: 'json',
-            validationGroups: ['strict', 'read'],
-            validationFailedStatusCode: Response::HTTP_UNPROCESSABLE_ENTITY
-        )]
-        CalculatePriceRequestDto $calculatePriceRequest, ValidatorInterface $validator
+    #[Route(path: '/purchase', methods: ['POST'], format: 'json')]
+    public function purchase(#[MapRequestPayload(
+        acceptFormat: 'json',
+        validationGroups: ['strict', 'read'],
+        validationFailedStatusCode: Response::HTTP_UNPROCESSABLE_ENTITY
+    )] PurchaseRequest $purchaseRequest, CalculateService $calculateService
     ): JsonResponse
     {
-        $dataValidate = $validator->validate($calculatePriceRequest);
-
-        if (count($dataValidate) > 0) {
-            $errors = [];
-            foreach ($dataValidate as $item) {
-                $errors[$item->getPropertyPath()] = $item->getMessage();
-            }
-            return new JsonResponse(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-        //TODO выбрать продукт
-        //TODO рассчитать итоговую цену с учетом купона (если применим) и налога
-
-        return new JsonResponse(['message' => 'success'], Response::HTTP_OK);
+        return $calculateService->calculate($purchaseRequest);
     }
 
     #[Route('/purchase', name: 'app_purchase', methods: ['POST'], format: 'json')]
-    public function purchase(
+    public function purchase2(
         #[MapRequestPayload(
             acceptFormat: 'json',
             validationGroups: ['strict', 'read'],
             validationFailedStatusCode: Response::HTTP_UNPROCESSABLE_ENTITY
         )]
-        PurchaseRequestDto $purchaseRequestDto, ValidatorInterface $validator
+        PurchaseRequest $purchaseRequestDto, ValidatorInterface $validator
     ): JsonResponse
     {
         $dataValidate = $validator->validate($purchaseRequestDto);
