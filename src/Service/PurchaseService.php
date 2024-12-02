@@ -20,7 +20,7 @@ readonly class PurchaseService
         private ValidatorInterface $validator
     ){}
 
-    public function calculate(PurchaseRequest $request): JsonResponse
+    public function purchase(PurchaseRequest $request): JsonResponse
     {
         $dataValidate = $this->validator->validate($request);
 
@@ -41,7 +41,7 @@ readonly class PurchaseService
         }
 
 //        dd($request);
-        //TODO рассчитать итоговую цену с учетом купона (если применим) и налога
+        //TODO использовать PaypalPaymentProcessor::pay() или StripePaymentProcessor::processPayment() для проведения платежа
 
         return new JsonResponse(['message' => 'success'], Response::HTTP_OK);
     }

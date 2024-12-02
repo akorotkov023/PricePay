@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Exception\CouponNotFoundException;
 use App\Exception\ProductNotFoundException;
 use App\Model\CalculatePriceRequest;
+use App\Model\PurchaseRequest;
 use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;

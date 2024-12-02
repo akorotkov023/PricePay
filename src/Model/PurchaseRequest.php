@@ -26,8 +26,7 @@ class PurchaseRequest
     #[Assert\NotBlank]
     #[Assert\Type(type: "string")]
     #[Assert\Choice(
-        choices: ['paypal', 'stripe'],
-        message: 'Choose payment processor'
+        choices: ['paypal', 'stripe']
     )]
     public mixed $paymentProcessor;
 
