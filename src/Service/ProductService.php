@@ -8,19 +8,21 @@ use App\Model\CalculatePriceRequest;
 use App\Model\PurchaseRequest;
 use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-readonly class CalculateService
+readonly class ProductService
 {
     public function __construct(
-        private ProductRepository $productRepository,
-        private CouponRepository  $couponRepository,
-        private ValidatorInterface $validator
+        private ProductRepository  $productRepository,
+        private CouponRepository   $couponRepository,
+        private ValidatorInterface $validator,
+        private PriceService       $priceService,
+        private PurchaseService    $purchaseService,
     ){}
-
-    public function calculate(CalculatePriceRequest $request): JsonResponse
+    public function calculate($request): JsonResponse
     {
         $dataValidate = $this->validator->validate($request);
 
@@ -40,9 +42,20 @@ readonly class CalculateService
             throw new CouponNotFoundException();
         }
 
-//        dd($request);
-        //TODO рассчитать итоговую цену с учетом купона (если применим) и налога
+        $res = [];
+        if ($request instanceof CalculatePriceRequest) {
+            //рассчитать итоговую цену
+            $price = $this->priceService->calcPrice($request);
+            $res['price'] = $price->getTotal();
+            $res['coupon'] = $price->getCoupon();
+            $res['nds'] = $price->getNds();
+        } elseif ($request instanceof PurchaseRequest) {
+            //провести платеж
+            $res['result'] = $this->purchaseService->purchase($request);
+        } else {
+            throw new InvalidArgumentException('Unsupported request type');
+        }
 
-        return new JsonResponse(['message' => 'success'], Response::HTTP_OK);
+        return new JsonResponse(['message' => 'success', 'details' => $res], Response::HTTP_OK);
     }
 }

@@ -21,20 +21,15 @@ class CouponRepository extends ServiceEntityRepository
         return null !== $this->findOneBy(['code' => $code]);
     }
 
-    //    /**
-    //     * @return Coupon[] Returns an array of Coupon objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findValueByCode(string $code): int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.value')
+            ->where('c.code = :val')
+            ->setParameter('val', $code)
+            ->getQuery()
+            ->getFirstResult();
+    }
 
     //    public function findOneBySomeField($value): ?Coupon
     //    {

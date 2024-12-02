@@ -11,7 +11,7 @@ when@dev:
                 path: "php://stderr"
                 level: debug
                 channels: ["!event"]
-                formatter: 'monolog.formatter.json'
+#                formatter: 'monolog.formatter.json'
             # file handler
             file_handler:
                 type: stream

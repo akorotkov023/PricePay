@@ -14,8 +14,9 @@ class PurchaseRequest
     #[Assert\NotBlank]
     #[Assert\Type(type: "string")]
     #[Assert\Regex(
-        pattern: '/^(DE|IT|FR|GR)\d{9}$|^FR[A-Z]\d{9}$/'
+        pattern: '/^(FR[A-Z]{2}\d{9}|DE\d{9}|GR\d{9}|IT\d{10})$/'
     )]
+    #[Assert\Length(max: 13)]
     public mixed $taxNumber;
 
     #[Assert\NotBlank]
