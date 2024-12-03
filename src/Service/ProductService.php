@@ -17,7 +17,6 @@ readonly class ProductService
 {
     public function __construct(
         private ProductRepository  $productRepository,
-        private CouponRepository   $couponRepository,
         private ValidatorInterface $validator,
         private PriceService       $priceService,
         private PurchaseService    $purchaseService,
@@ -38,20 +37,20 @@ readonly class ProductService
             throw new ProductNotFoundException();
         }
 
-        if (!$this->couponRepository->existsByCode($request->couponCode)) {
-            throw new CouponNotFoundException();
-        }
+        $productDataRequest = new Product($request->product, $request->taxNumber, $request->couponCode, $request->paymentProcessor ?? null);
 
         $res = [];
         if ($request instanceof CalculatePriceRequest) {
             //рассчитать итоговую цену
-            $price = $this->priceService->calcPrice($request);
+            $price = $this->priceService->calcPrice($productDataRequest);
             $res['price'] = $price->getTotal();
             $res['coupon'] = $price->getCoupon();
             $res['nds'] = $price->getNds();
+
         } elseif ($request instanceof PurchaseRequest) {
-            //провести платеж
-            $res['result'] = $this->purchaseService->purchase($request);
+            //рассчитать итоговую цену и провести платеж
+            $price = $this->priceService->calcPrice($productDataRequest);
+            $res['result'] = $this->purchaseService->purchase($productDataRequest, $price->getTotal());
         } else {
             throw new InvalidArgumentException('Unsupported request type');
         }

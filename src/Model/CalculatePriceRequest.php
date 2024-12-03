@@ -19,11 +19,11 @@ class CalculatePriceRequest
     #[Assert\Length(max: 13)]
     public mixed $taxNumber;
 
-    #[Assert\NotBlank]
+    #[Assert\Type(type: "string")]
     #[Assert\Length(max: 3)]
     public mixed $couponCode;
 
-    public function __construct(mixed $product, mixed $taxNumber, mixed $couponCode)
+    public function __construct(mixed $product, mixed $taxNumber, mixed $couponCode = null)
     {
         $this->product = $product;
         $this->taxNumber = $taxNumber;

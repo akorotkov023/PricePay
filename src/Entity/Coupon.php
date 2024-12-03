@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CouponRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CouponRepository::class)]
@@ -14,7 +15,7 @@ class Coupon
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: "integer")]
     private ?int $id = null;
 
     #[ORM\Column(length: 10, unique: true)]

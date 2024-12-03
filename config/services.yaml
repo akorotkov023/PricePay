@@ -8,6 +8,7 @@ parameters:
         Symfony\Component\HttpKernel\Exception\NotFoundHttpException: { code: 404 }
         App\Exception\CouponNotFoundException: { code: 422, hidden: false }
         App\Exception\ProductNotFoundException: { code: 422, hidden: false }
+        App\Exception\PriceServiceException: { code: 422, hidden: false }
         App\Exception\ValidationException: { code: 422, hidden: false }
 services:
     # default configuration for services in *this* file
