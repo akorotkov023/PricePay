@@ -27,15 +27,15 @@ final class Version20241129114651 extends AbstractMigration
         $this->addSql("INSERT INTO product (id, name, price) VALUES (2, 'Наушники', 2000)");
         $this->addSql("INSERT INTO product (id, name, price) VALUES (3, 'Чехол', 1000)");
         // Добавление записей в таблицу coupon
-        $this->addSql("INSERT INTO coupon (id, code, type, value) VALUES (1, 'P10', 'fixed', 1000)");
-        $this->addSql("INSERT INTO coupon (id, code, type, value) VALUES (2, 'P30', 'fixed', 3000)");
-        $this->addSql("INSERT INTO coupon (id, code, type, value) VALUES (3, 'P5', 'percentage', 500)");
-        $this->addSql("INSERT INTO coupon (id, code, type, value) VALUES (4, 'P15', 'percentage', 1500)");
+        $this->addSql("INSERT INTO coupon (id, code, type, value) VALUES (1, 'F10', 'fixed', 1000)");
+        $this->addSql("INSERT INTO coupon (id, code, type, value) VALUES (2, 'F20', 'fixed', 2000)");
+        $this->addSql("INSERT INTO coupon (id, code, type, value) VALUES (3, 'P5', 'percentage', 5)");
+        $this->addSql("INSERT INTO coupon (id, code, type, value) VALUES (4, 'P15', 'percentage', 15)");
         // Добавление записей в таблицу country_tax
-        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (1, 'Германия', 1900, 'DE')");
-        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (2, 'Италия', 2200, 'IT')");
-        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (3, 'Франция', 2000, 'FR')");
-        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (4, 'Греция', 2400, 'GR')");
+        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (1, 'Германия', 19, 'DE')");
+        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (2, 'Италия', 22, 'IT')");
+        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (3, 'Франция', 20, 'FR')");
+        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (4, 'Греция', 24, 'GR')");
 
     }
 

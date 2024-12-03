@@ -4,7 +4,7 @@ namespace App\Service;
 
 readonly class Product
 {
-    public function __construct(private int $product,  private string $taxNumber, private string $couponCode, private ?string $paymentProcessor = null)
+    public function __construct(private int $product,  private string $taxNumber, private ?string $couponCode = null, private ?string $paymentProcessor = null)
     {
     }
 
@@ -18,7 +18,7 @@ readonly class Product
         return $this->taxNumber;
     }
 
-    public function getCouponCode(): string
+    public function getCouponCode(): ?string
     {
         return $this->couponCode;
     }

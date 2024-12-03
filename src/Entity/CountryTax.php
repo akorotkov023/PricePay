@@ -24,11 +24,6 @@ class CountryTax
     #[ORM\Column]
     private ?int $tax = null;
 
-    public function __construct()
-    {
-        $this->productCountryTaxes = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;

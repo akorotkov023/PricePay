@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Exception\PriceServiceException;
-use App\Model\CalculatePriceRequest;
 use App\Repository\CountryTaxRepository;
 use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
@@ -17,21 +16,35 @@ readonly class PriceService
     ){}
     public function calcPrice($productDataRequest): Price
     {
-        // то цена будет 116.56 евро (100 евро - 6% скидка + налог 24%).
-//        dd($productDataRequest);
         try {
             $product = $this->productRepository->find($productDataRequest->getProduct());
             $coupon = $this->couponRepository->findOneBy(['code' => $productDataRequest->getCouponCode()]);
             $slug = substr($productDataRequest->getTaxNumber(), 0, 2);
             $tax = $this->countryTaxRepository->findOneBy(['slug' => $slug]);
+
             $couponPrice = 0;
+            $couponFlag = false;
+            $price = $product->getPrice();
+            $tax = $tax->getTax();
+
             if ($coupon) {
+                $couponFlag = true;
                 $couponPrice = $coupon->getValue();
             }
-            //TODO рассчитать проценты правильно
-            $total = $product->getPrice() - $couponPrice + $tax->getTax();
 
-            return new Price($total, $couponPrice, $tax->getTax());
+            if ($couponFlag) {
+                $discountedPrice = $coupon->getType() === 'percentage'
+                    ? $price - ($price * ($couponPrice / 100))
+                    : $price - $couponPrice;
+
+                $total = $discountedPrice + ($discountedPrice * ($tax / 100));
+
+                return new Price($total, $couponPrice, $tax);
+            }
+
+            $total = $price + ($price * ($tax / 100));
+
+            return new Price($total, $couponPrice, $tax);
 
         } catch (PriceServiceException) {
             throw new PriceServiceException();
