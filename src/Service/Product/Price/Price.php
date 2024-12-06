@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Product\Price;
 
 readonly class Price
 {

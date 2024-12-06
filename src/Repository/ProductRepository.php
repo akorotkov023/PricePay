@@ -21,7 +21,7 @@ class ProductRepository extends ServiceEntityRepository
         return null !== $this->find($id);
     }
 
-    //    public function findOneBySomeField($value): ?Product
+    //    public function findOneBySomeField($value): ?ProductData
     //    {
     //        return $this->createQueryBuilder('p')
     //            ->andWhere('p.exampleField = :val')

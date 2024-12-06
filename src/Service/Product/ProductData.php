@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Product;
 
-readonly class Product
+readonly class ProductData
 {
-    public function __construct(private int $product,  private string $taxNumber, private ?string $couponCode = null, private ?string $paymentProcessor = null)
-    {
-    }
+    public function __construct(
+        private int $product,
+        private string $taxNumber,
+        private ?string $couponCode = null,
+        private ?string $paymentProcessor = null
+    ){}
 
     public function getProduct(): int
     {
@@ -27,9 +30,4 @@ readonly class Product
     {
         return $this->paymentProcessor;
     }
-
-
-
-
-
 }

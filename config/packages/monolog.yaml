@@ -17,7 +17,7 @@ when@dev:
                 type: stream
                 level: debug
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
-                channels: [ '!event' ]
+                channels: [ '!event', '!request' ]
 
 when@test:
     monolog:

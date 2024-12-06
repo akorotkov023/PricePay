@@ -8,7 +8,6 @@ use App\Entity\Coupon;
 use App\Repository\CountryTaxRepository;
 use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
-use App\Service\PriceService;
 use App\Tests\AbstractTestCase;
 use App\Tests\MockUtils;
 
