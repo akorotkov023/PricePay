@@ -22,30 +22,6 @@ final readonly class PriceService implements PriceServiceInterface
             $slug = substr($productDataRequest->getTaxNumber(), 0, 2);
             $tax = $this->countryTaxRepository->findOneBy(['slug' => $slug]);
 
-//            $couponPrice = 0;
-//            $couponFlag = false;
-//            $price = $product->getPrice();
-//            $tax = $tax->getTax();
-//
-//            if ($coupon) {
-//                $couponFlag = true;
-//                $couponPrice = $coupon->getValue();
-//            }
-//
-//            if ($couponFlag) {
-//                $discountedPrice = $coupon->getType() === 'percentage'
-//                    ? $price - ($price * ($couponPrice / 100))
-//                    : $price - $couponPrice;
-//
-//                $total = $discountedPrice + ($discountedPrice * ($tax / 100));
-//
-//                return new Price($total, $couponPrice, $tax);
-//            }
-//
-//            $total = $price + ($price * ($tax / 100));
-//
-//            return new Price($total, $couponPrice, $tax);
-
             $price = $product->getPrice();
             $couponPrice = $coupon ? $this->applyCoupon($price, $coupon) : 0;
             $total = $this->applyTax($price - $couponPrice, $tax);

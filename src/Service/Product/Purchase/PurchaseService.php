@@ -4,7 +4,7 @@ namespace App\Service\Product\Purchase;
 
 use App\Service\Product\PaymentProcessor\Definer;
 
-final class PurchaseService
+final class PurchaseService implements PurchaseServiceInterface
 {
     private Definer $definer;
 

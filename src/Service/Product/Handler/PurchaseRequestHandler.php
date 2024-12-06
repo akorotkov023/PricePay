@@ -27,6 +27,7 @@ final readonly class PurchaseRequestHandler
 
         $defineProcessor = DefinerProcessor::define($productDataRequest->getPaymentProcessor());
         $processor = new PurchaseService($defineProcessor);
+
         $result = $processor->purchase($price->getTotal());
 
         return ['result' => $result];
