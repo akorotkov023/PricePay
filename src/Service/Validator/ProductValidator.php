@@ -7,12 +7,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 readonly class ProductValidator implements ValidatorService
 {
-    public function __construct( private ValidatorInterface $validator)
+    public function __construct(private ValidatorInterface $validator)
     {}
 
-    public function validate($creditParamsRequest): void
+    public function validate($paramsRequest): void
     {
-        $dataValidate = $this->validator->validate($creditParamsRequest);
+        $dataValidate = $this->validator->validate($paramsRequest);
         if (count($dataValidate) > 0) {
             foreach ($dataValidate as $item) {
                 $errors = '[' . $item->getPropertyPath() . '] ' . $item->getMessage();

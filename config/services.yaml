@@ -10,6 +10,7 @@ parameters:
         App\Exception\CouponNotFoundException: { code: 422, hidden: false }
         App\Exception\ProductNotFoundException: { code: 422, hidden: false }
         App\Exception\PriceServiceException: { code: 422, hidden: false }
+        App\Exception\PriceArgumentException: { code: 422, hidden: false }
         App\Exception\ValidationException: { code: 422, hidden: false }
         App\Exception\ValidateException: { code: 422, hidden: false }
 services:

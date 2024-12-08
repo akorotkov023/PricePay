@@ -8,7 +8,7 @@ use App\Service\Product\Price\PriceServiceInterface;
 use App\Service\Product\ProductData;
 use App\Service\Product\Purchase\PurchaseService;
 
-final readonly class PurchaseRequestHandler
+readonly class PurchaseRequestHandler
 {
     public function __construct(
         private PriceServiceInterface $priceService,
@@ -32,5 +32,4 @@ final readonly class PurchaseRequestHandler
 
         return ['result' => $result];
     }
-
 }

@@ -17,6 +17,8 @@ class PurchaseRequestHandlerTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->priceServiceMock = $this->createMock(PriceServiceInterface::class);
         $this->purchaseRequestHandler = new PurchaseRequestHandler($this->priceServiceMock);
     }
@@ -35,7 +37,6 @@ class PurchaseRequestHandlerTest extends TestCase
         $defineProcessor = DefinerProcessor::define('paypal');
         $processor = new PurchaseService($defineProcessor);
         $result = $processor->purchase($price->getTotal());
-
 
         $this->assertEquals($expect, ["result" => $result]);
     }

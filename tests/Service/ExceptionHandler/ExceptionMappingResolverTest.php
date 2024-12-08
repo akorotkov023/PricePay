@@ -8,7 +8,6 @@ use App\Tests\AbstractTestCase;
 class ExceptionMappingResolverTest extends AbstractTestCase
 {
 
-
     public function testThrowsExceptionOnEmptyCode(): void
     {
         $this->expectException(\InvalidArgumentException::class);

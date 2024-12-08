@@ -23,10 +23,11 @@ final readonly class PriceService implements PriceServiceInterface
             $tax = $this->countryTaxRepository->findOneBy(['slug' => $slug]);
 
             $price = $product->getPrice();
+            $couponValue = $coupon ? $coupon->getValue() : 0;
             $couponPrice = $coupon ? $this->applyCoupon($price, $coupon) : 0;
             $total = $this->applyTax($price - $couponPrice, $tax);
 
-            return new Price($total, $couponPrice, $tax->getTax());
+            return new Price($total, $couponValue, $tax->getTax());
 
         } catch (PriceServiceException) {
             throw new PriceServiceException();

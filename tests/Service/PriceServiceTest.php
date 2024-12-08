@@ -5,64 +5,104 @@ namespace App\Tests\Service;
 use App\Entity\Product;
 use App\Entity\CountryTax;
 use App\Entity\Coupon;
+use App\Exception\PriceServiceException;
 use App\Repository\CountryTaxRepository;
 use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
+use App\Service\Product\Price\Price;
+use App\Service\Product\Price\PriceService;
+use App\Service\Product\ProductData;
 use App\Tests\AbstractTestCase;
 use App\Tests\MockUtils;
 
 class PriceServiceTest extends AbstractTestCase
 {
 
-    private ProductRepository $productRepository;
-    private CouponRepository $couponRepository;
-    private CountryTaxRepository $countryTaxRepository;
+    private ProductRepository $productRepositoryMock;
+    private CouponRepository $couponRepositoryMock;
+    private CountryTaxRepository $countryTaxRepositoryMock;
+    private PriceService $priceService;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->productRepository = $this->createMock(ProductRepository::class);
-        $this->couponRepository = $this->createMock(CouponRepository::class);
-        $this->countryTaxRepository = $this->createMock(CountryTaxRepository::class);
+        $this->productRepositoryMock = $this->createMock(ProductRepository::class);
+        $this->couponRepositoryMock = $this->createMock(CouponRepository::class);
+        $this->countryTaxRepositoryMock = $this->createMock(CountryTaxRepository::class);
+
+        $this->priceService = new PriceService(
+            $this->productRepositoryMock,
+            $this->couponRepositoryMock,
+            $this->countryTaxRepositoryMock
+        );
+
     }
 
     public function testCalcPriceWithCoupon()
     {
-        $productId = 1;
-        $taxNumber = 'DE123456789';
-        $couponCode = 'P15';
-
-        $this->productRepository->expects($this->once())
+        $productDataRequest = new ProductData(1, 'tax_number', 'coupon_code');
+        $this->productRepositoryMock->expects($this->once())
             ->method('find')
-            ->with($productId)
+            ->with($productDataRequest->getProduct())
             ->willReturn($this->createProductEntity());
 
-        $this->couponRepository->expects($this->once())
+        $this->couponRepositoryMock->expects($this->once())
             ->method('findOneBy')
-            ->with(['code' => $couponCode])
+            ->with(['code' => $productDataRequest->getCouponCode()])
             ->willReturn($this->createCouponEntity());
 
-        $slug = substr($taxNumber, 0, 2);
-        $this->countryTaxRepository->expects($this->once())
+        $slug = substr($productDataRequest->getTaxNumber(), 0, 2);
+        $this->countryTaxRepositoryMock->expects($this->once())
             ->method('findOneBy')
             ->with(['slug' => $slug])
             ->willReturn($this->createCountryTaxEntity());
 
-        $couponFlag = true;
-        $coupon = $this->couponRepository->findOneBy(['code' => $couponCode]);
-        $product = $this->productRepository->find($productId);
-        $price = $product->getPrice();
-        $tax = $this->countryTaxRepository->findOneBy(['slug' => $slug])->getTax();
+        $price = $this->priceService->calculatePrice($productDataRequest);
 
-        $discountedPrice = $couponFlag && $coupon->getType() === 'percentage'
-            ? $price - ($price * ($coupon->getValue() / 100))
-            : $price - $coupon->getValue();
+        $this->assertInstanceOf(Price::class, $price);
+        $this->assertEquals(11656, $price->getTotal());
+    }
 
-        $total = $discountedPrice + ($discountedPrice * ($tax / 100));
+    public function testCalculatePriceWithoutCoupon()
+    {
+        $productDataRequest = new ProductData(1, 'tax_number', null);
+        $this->productRepositoryMock->expects($this->once())
+            ->method('find')
+            ->with($productDataRequest->getProduct())
+            ->willReturn($this->createProductEntity());
 
-        $this->assertEquals(11656, $total);
+        $this->couponRepositoryMock->expects($this->once())
+            ->method('findOneBy')
+            ->with(['code' => $productDataRequest->getCouponCode()])
+            ->willReturn(null);
 
+        $slug = substr($productDataRequest->getTaxNumber(), 0, 2);
+        $this->countryTaxRepositoryMock->expects($this->once())
+            ->method('findOneBy')
+            ->with(['slug' => $slug])
+            ->willReturn($this->createCountryTaxEntity());
+
+        $price = $this->priceService->calculatePrice($productDataRequest);
+
+        $this->assertInstanceOf(Price::class, $price);
+        $this->assertEquals(12400, $price->getTotal());
+        $this->assertEquals(0, $price->getCoupon());
+        $this->assertEquals(24, $price->getNds());
+    }
+
+    public function testCalculatePriceThrowsException()
+    {
+        $productDataRequest = new ProductData(1, 'tax_number', 'coupon_code');
+
+        $this->productRepositoryMock
+            ->method('find')
+            ->with($this->equalTo($productDataRequest->getProduct()))
+            ->willThrowException(new PriceServiceException());
+
+        $this->expectException(PriceServiceException::class);
+
+        $this->priceService->calculatePrice($productDataRequest);
     }
 
     private function createProductEntity(): Product

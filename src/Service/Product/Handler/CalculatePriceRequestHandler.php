@@ -6,7 +6,7 @@ use App\Model\CalculatePriceRequest;
 use App\Service\Product\Price\PriceServiceInterface;
 use App\Service\Product\ProductData;
 
-final readonly class CalculatePriceRequestHandler
+readonly class CalculatePriceRequestHandler
 {
     public function __construct(
         private PriceServiceInterface $priceService
@@ -27,5 +27,4 @@ final readonly class CalculatePriceRequestHandler
             'nds' => $price->getNds() ?? 0
         ];
     }
-
 }
