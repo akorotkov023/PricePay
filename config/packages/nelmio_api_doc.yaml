@@ -1,0 +1,9 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Api cars
+            description: API for getting cars and more
+            version: 1.0.0
+        areas:
+            path_patterns:
+                - ^/api/v1
