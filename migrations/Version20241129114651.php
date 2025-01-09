@@ -31,11 +31,21 @@ final class Version20241129114651 extends AbstractMigration
         $this->addSql("INSERT INTO coupon (id, code, type, value) VALUES (2, 'F20', 'fixed', 2000)");
         $this->addSql("INSERT INTO coupon (id, code, type, value) VALUES (3, 'P5', 'percentage', 5)");
         $this->addSql("INSERT INTO coupon (id, code, type, value) VALUES (4, 'P15', 'percentage', 15)");
+
+//        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (1, 'Германия', 19, 'DE')");
+//        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (2, 'Италия', 22, 'IT')");
+//        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (3, 'Франция', 20, 'FR')");
+//        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (4, 'Греция', 24, 'GR')");
+        // Добавление записей в таблицу country
+        $this->addSql("INSERT INTO country (id, country, tax, slug) VALUES (1, 'Германия', 'DE')");
+        $this->addSql("INSERT INTO country (id, country, tax, slug) VALUES (2, 'Италия', 'IT')");
+        $this->addSql("INSERT INTO country (id, country, tax, slug) VALUES (3, 'Франция', 'FR')");
+        $this->addSql("INSERT INTO country (id, country, tax, slug) VALUES (4, 'Греция', 'GR')");
         // Добавление записей в таблицу country_tax
-        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (1, 'Германия', 19, 'DE')");
-        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (2, 'Италия', 22, 'IT')");
-        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (3, 'Франция', 20, 'FR')");
-        $this->addSql("INSERT INTO country_tax (id, country, tax, slug) VALUES (4, 'Греция', 24, 'GR')");
+        $this->addSql("INSERT INTO country_tax (id, tax) VALUES (1, 19)");
+        $this->addSql("INSERT INTO country_tax (id, tax) VALUES (2, 22)");
+        $this->addSql("INSERT INTO country_tax (id, tax) VALUES (3, 20)");
+        $this->addSql("INSERT INTO country_tax (id, tax) VALUES (4, 24)");
 
     }
 
