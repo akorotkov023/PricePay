@@ -19,6 +19,20 @@ class Country
     #[ORM\Column(length: 2, unique: true)]
     private ?string $slug = null;
 
+    #[ORM\ManyToOne(targetEntity: "App\Entity\CountryTax", fetch: "EAGER", inversedBy: "collect")]
+    #[ORM\JoinColumn(name: "tax_id", referencedColumnName: "id")]
+    private CountryTax $taxId;
+
+    public function setTaxId(CountryTax $taxId): void
+    {
+        $this->taxId = $taxId;
+    }
+
+    public function getTaxId(): CountryTax
+    {
+        return $this->taxId;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CountryTaxRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CountryTaxRepository::class)]
@@ -16,9 +18,17 @@ class CountryTax
     #[ORM\Column]
     private ?int $tax = null;
 
-    #[ORM\ManyToOne(targetEntity: Country::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Country $country = null;
+    #[ORM\OneToMany(targetEntity: "App\Entity\Country", mappedBy: "taxId")]
+    private Collection $collect;
+
+    public function __construct() {
+        $this->collect = new ArrayCollection();
+    }
+
+    public function getCollect(): Collection
+    {
+        return $this->collect;
+    }
 
     public function getId(): ?int
     {

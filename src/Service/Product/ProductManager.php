@@ -9,7 +9,7 @@ use App\Service\Validator\ValidatorService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-final readonly class ProductManager implements ProductManagerInterface
+final readonly class ProductManager
 {
     public function __construct(
         private ValidatorService  $productValidator,

@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Entity\Country;
 use App\Entity\CountryTax;
 use App\Entity\Coupon;
 use App\Entity\Product;
@@ -25,12 +26,16 @@ class MockUtils
             ->setValue(6);
     }
 
+    public static function createCountry(): Country
+    {
+        return (new Country())
+            ->setSlug('IT')
+            ->setCountry('Италия');
+    }
     public static function createTax(): CountryTax
     {
         return (new CountryTax())
-            ->setId(1)
-            ->setSlug('IT')
-            ->setCountry('Италия')
             ->setTax(24);
     }
+
 }
