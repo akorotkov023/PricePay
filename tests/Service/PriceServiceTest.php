@@ -2,10 +2,12 @@
 
 namespace App\Tests\Service;
 
+use App\Entity\Country;
 use App\Entity\Product;
 use App\Entity\CountryTax;
 use App\Entity\Coupon;
 use App\Exception\PriceServiceException;
+use App\Repository\CountryRepository;
 use App\Repository\CountryTaxRepository;
 use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
@@ -20,7 +22,7 @@ class PriceServiceTest extends AbstractTestCase
 
     private ProductRepository $productRepositoryMock;
     private CouponRepository $couponRepositoryMock;
-    private CountryTaxRepository $countryTaxRepositoryMock;
+    private CountryRepository $countryRepositoryMock;
     private PriceService $priceService;
 
     protected function setUp(): void
@@ -29,12 +31,12 @@ class PriceServiceTest extends AbstractTestCase
 
         $this->productRepositoryMock = $this->createMock(ProductRepository::class);
         $this->couponRepositoryMock = $this->createMock(CouponRepository::class);
-        $this->countryTaxRepositoryMock = $this->createMock(CountryTaxRepository::class);
+        $this->countryRepositoryMock = $this->createMock(CountryRepository::class);
 
         $this->priceService = new PriceService(
             $this->productRepositoryMock,
             $this->couponRepositoryMock,
-            $this->countryTaxRepositoryMock
+            $this->countryRepositoryMock
         );
 
     }
@@ -53,10 +55,10 @@ class PriceServiceTest extends AbstractTestCase
             ->willReturn($this->createCouponEntity());
 
         $slug = substr($productDataRequest->getTaxNumber(), 0, 2);
-        $this->countryTaxRepositoryMock->expects($this->once())
+        $this->countryRepositoryMock->expects($this->once())
             ->method('findOneBy')
             ->with(['slug' => $slug])
-            ->willReturn($this->createCountryTaxEntity());
+            ->willReturn($this->createCountryEntity());
 
         $price = $this->priceService->calculatePrice($productDataRequest);
 
@@ -78,10 +80,10 @@ class PriceServiceTest extends AbstractTestCase
             ->willReturn(null);
 
         $slug = substr($productDataRequest->getTaxNumber(), 0, 2);
-        $this->countryTaxRepositoryMock->expects($this->once())
+        $this->countryRepositoryMock->expects($this->once())
             ->method('findOneBy')
             ->with(['slug' => $slug])
-            ->willReturn($this->createCountryTaxEntity());
+            ->willReturn($this->createCountryEntity());
 
         $price = $this->priceService->calculatePrice($productDataRequest);
 
@@ -119,6 +121,15 @@ class PriceServiceTest extends AbstractTestCase
         $this->setEntityId($coupon, 1);
 
         return $coupon;
+    }
+
+    private function createCountryEntity(): Country
+    {
+        $country = MockUtils::createCountry();
+        $country->setTaxId(MockUtils::createTax());
+        $this->setEntityId($country, 1);
+
+        return $country;
     }
 
     private function createCountryTaxEntity(): CountryTax

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Model\CalculatePriceRequest;
 use App\Model\PurchaseRequest;
+use App\Service\Product\ProductManager;
 use App\Service\Product\ProductManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,7 +21,7 @@ class ProductController extends AbstractController
         acceptFormat: 'json',
         validationGroups: ['strict', 'read'],
         validationFailedStatusCode: Response::HTTP_UNPROCESSABLE_ENTITY
-    )] CalculatePriceRequest $calculatePriceRequest, ProductManagerInterface $productManager
+    )] CalculatePriceRequest $calculatePriceRequest, ProductManager $productManager
     ): JsonResponse
     {
         return $productManager->calculate($calculatePriceRequest);
@@ -31,7 +32,7 @@ class ProductController extends AbstractController
         acceptFormat: 'json',
         validationGroups: ['strict', 'read'],
         validationFailedStatusCode: Response::HTTP_UNPROCESSABLE_ENTITY
-    )] PurchaseRequest $purchaseRequest, ProductManagerInterface $productManager
+    )] PurchaseRequest $purchaseRequest, ProductManager $productManager
     ): JsonResponse
     {
         return $productManager->calculate($purchaseRequest);

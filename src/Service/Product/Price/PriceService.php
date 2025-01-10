@@ -3,7 +3,7 @@
 namespace App\Service\Product\Price;
 
 use App\Exception\PriceServiceException;
-use App\Repository\CountryTaxRepository;
+use App\Repository\CountryRepository;
 use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
 
@@ -12,7 +12,7 @@ final readonly class PriceService implements PriceServiceInterface
     public function __construct(
         private ProductRepository $productRepository,
         private CouponRepository $couponRepository,
-        private CountryTaxRepository $countryTaxRepository,
+        private CountryRepository $countryRepository,
     ){}
     public function calculatePrice($productDataRequest): Price
     {
@@ -20,14 +20,14 @@ final readonly class PriceService implements PriceServiceInterface
             $product = $this->productRepository->find($productDataRequest->getProduct());
             $coupon = $this->couponRepository->findOneBy(['code' => $productDataRequest->getCouponCode()]);
             $slug = substr($productDataRequest->getTaxNumber(), 0, 2);
-            $tax = $this->countryTaxRepository->findOneBy(['slug' => $slug]);
+            $tax = $this->countryRepository->findOneBy(['slug' => $slug]);
 
             $price = $product->getPrice();
             $couponValue = $coupon ? $coupon->getValue() : 0;
             $couponPrice = $coupon ? $this->applyCoupon($price, $coupon) : 0;
             $total = $this->applyTax($price - $couponPrice, $tax);
 
-            return new Price($total, $couponValue, $tax->getTax());
+            return new Price($total, $couponValue, $tax->getTaxId()->getTax());
 
         } catch (PriceServiceException) {
             throw new PriceServiceException();
@@ -42,6 +42,6 @@ final readonly class PriceService implements PriceServiceInterface
     }
 
     private function applyTax(int $price, $tax): int {
-        return $price + ($price * ($tax->getTax() / 100));
+        return $price + ($price * ($tax->getTaxId()->getTax() / 100));
     }
 }
